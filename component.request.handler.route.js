@@ -1,6 +1,6 @@
-const logging = require("logging");
 const componentRequestHandler = require("component.request.handler");
-
+const logging = require("logging");
+logging.config.add("Request Handler");
 module.exports = { 
     sessions: [],
     handle: ({ port, path }) => {
