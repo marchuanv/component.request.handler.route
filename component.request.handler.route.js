@@ -1,6 +1,6 @@
 const componentRequestHandler = require("component.request.handler");
 const logging = require("logging");
-logging.config.add("Request Handler");
+logging.config.add("Request Handler Route");
 module.exports = { 
     sessions: [],
     handle: ({ port, path }) => {
@@ -14,14 +14,14 @@ module.exports = {
                                 let results = callback(request);
                                 if (results && results.then){
                                     results = await results.catch((error)=>{
-                                        logging.write("Request Route"," ", error.toString());
+                                        logging.write("Request Handler Route"," ", error.toString());
                                         resultsReject(error);
                                     });
                                 }
                                 if (results){
                                     resultsResolve(results)
                                 } else {
-                                    logging.write("Request Route",`callback did not return any data`);
+                                    logging.write("Request Handler Route",`callback did not return any data`);
                                     return resultsReject("callback did not return any data.");
                                 }
                             }});
