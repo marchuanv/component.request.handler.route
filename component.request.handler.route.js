@@ -8,7 +8,7 @@ module.exports = {
             const requeue = async () => {
                 (await componentRequestHandler.port(options)).handle(async(request) => {
                     let results = { headers: {}, statusCode: -1, statusMessage: "" };
-                    if (request.path === path) {
+                    if (request.path === options.path) {
                         const resultsPromise = new Promise((resultsResolve, resultsReject) => {
                             resovle({ receive: async (callback) => {
                                 let results = callback(request);
