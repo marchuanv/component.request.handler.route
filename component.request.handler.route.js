@@ -3,10 +3,10 @@ const logging = require("logging");
 logging.config.add("Request Handler Route");
 module.exports = { 
     sessions: [],
-    handle: ({ port, path }) => {
+    handle: (options) => {
         return new Promise(async (resovle) => {
             const requeue = async () => {
-                (await componentRequestHandler.port( { port })).handle(async(request) => {
+                (await componentRequestHandler.port(options)).handle(async(request) => {
                     let results = { headers: {}, statusCode: -1, statusMessage: "" };
                     if (request.path === path) {
                         const resultsPromise = new Promise((resultsResolve, resultsReject) => {
