@@ -1,6 +1,4 @@
 const componentRequestHandlerRoute = require("./component.request.handler.route.js");
-const logging = require("logging");
-logging.config(["Request Route","Request Handler"]);
 (async()=>{
     const requeue = async () => {
         (await componentRequestHandlerRoute.handle({ port: 3000, path: "/test" })).receive((request) => {
