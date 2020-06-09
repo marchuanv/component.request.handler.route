@@ -1,18 +1,11 @@
-const componentRequestHandlerRoute = require("./component.request.handler.route.js");
-(async()=>{
-    const requeue = async () => {
-        (await componentRequestHandlerRoute.handle({ port: 3000, path: "/test" })).receive((request) => {
-            requeue();
-            return {
-                statusCode: 200,
-                statusMessage: "Success",
-                headers: {"Content-Type":"text/html"},
-                contentType: "text/html",
-                data: "<html>HELLO</html>"
-            };
-        });
-    };
-    requeue();
+const requestHandler = require("./component.request.handler.route.js");
+const delegate = require("component.delegate");
+(async()=>{ 
+    const callingModule = "component.request.handler.deferred";
+    delegate.register(callingModule, (callback) => {
+        return { statusCode: 200, statusMessage: "Success", headers: {}, data: null };
+    });
+    await requestHandler.handle({ callingModule, port: 3000, path: "/test" });
 })().catch((err)=>{
-    console.log(err);
+    console.error(err);
 });
