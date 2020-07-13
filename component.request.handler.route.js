@@ -4,10 +4,10 @@ const logging = require("logging");
 logging.config.add("Request Handler Route");
 module.exports = { 
     handle: ({ callingModule, port, path }) => {
-        delegate.register("component.request.handler.route", (request) => {
+        delegate.register("component.request.handler.route", async (request) => {
             let results = { headers: {}, statusCode: -1, statusMessage: "" };
             if (request.path === path) {
-                return delegate.call(callingModule, request);
+                return await delegate.call(callingModule, request);
             } else {
                 const message = "Not Found";
                 results.statusCode = 404;
