@@ -3,12 +3,15 @@ const delegate = require("component.delegate");
 const logging = require("logging");
 logging.config.add("Request Handler Route");
 module.exports = { 
+    routes: [],
     handle: (callingModule, { port, path }) => {
-        const currentModule = `component.request.handler.route.${path.replace(/\//g,"")}`;
+        module.exports.routes.push({ module: callingModule, path });
+        const currentModule = `component.request.handler.route`;
         delegate.register(currentModule, async (request) => {
             let results = { headers: {}, statusCode: -1, statusMessage: "" };
-            if (request.path === path) {
-                return await delegate.call(callingModule, request);
+            const routeModule = module.exports.routes.find(route => route.path === request.path);
+            if (routeModule) {
+                return await delegate.call(routeModule.module, request);
             } else {
                 const message = "Not Found";
                 results.statusCode = 404;
