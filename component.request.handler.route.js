@@ -4,7 +4,8 @@ const logging = require("logging");
 logging.config.add("Request Handler Route");
 module.exports = { 
     handle: ({ callingModule, port, path }) => {
-        delegate.register("component.request.handler.route", async (request) => {
+        const currentModule = `component.request.handler.route.${path.replace("/","")}`;
+        delegate.register(currentModule, async (request) => {
             let results = { headers: {}, statusCode: -1, statusMessage: "" };
             if (request.path === path) {
                 return await delegate.call(callingModule, request);
@@ -17,6 +18,6 @@ module.exports = {
             }
             return results;
         });
-        requestHandler.handle({ callingModule: "component.request.handler.route", port });
+        requestHandler.handle(currentModule, { port });
     }
 };
