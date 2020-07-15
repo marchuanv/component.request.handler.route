@@ -7,7 +7,7 @@ module.exports = {
         const thisModule = `component.request.handler.route.${path.replace(/\//g,"")}.${port}`;
         delegate.register(thisModule, async (request) => {
             let results = { headers: {}, statusCode: -1, statusMessage: "" };
-            if (routeModule) {
+            if (request.path === path && request.port === port) {
                 return await delegate.call(callingModule, request);
             } else {
                 const message = "Not Found";
