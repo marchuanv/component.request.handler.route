@@ -3,11 +3,16 @@ const delegate = require("component.delegate");
 const logging = require("logging");
 logging.config.add("Request Handler Route");
 module.exports = { 
+<<<<<<< HEAD
+    handle: ({ callingModule, host, port, path }) => {
+        delegate.register("component.request.handler.route", async (request) => {
+=======
     routes: [],
-    handle: (callingModule, { host, port, path }) => {
+    handle: (callingModule, { port, path }) => {
         const thisModule = `component.request.handler.route.${port}`;
         module.exports.routes.push({ module: callingModule, port, path });
         delegate.register(thisModule, async (request) => {
+>>>>>>> e1e6554c15c0ec57ad2bdb5d7c0cf32a3efcac4e
             let results = { headers: {}, statusCode: -1, statusMessage: "" };
             const route = module.exports.routes.find(r => r.path === request.path && r.port === request.port);
             if (route) {
@@ -21,6 +26,10 @@ module.exports = {
                 return results;
             }
         });
-        requestHandler.handle(thisModule, { host, port });
+<<<<<<< HEAD
+        requestHandler.handle({ callingModule: "component.request.handler.route", host, port });
+=======
+        requestHandler.handle(thisModule, { port });
+>>>>>>> e1e6554c15c0ec57ad2bdb5d7c0cf32a3efcac4e
     }
 };
