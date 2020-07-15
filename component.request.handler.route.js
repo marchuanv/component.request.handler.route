@@ -5,11 +5,11 @@ logging.config.add("Request Handler Route");
 module.exports = { 
     routes: [],
     handle: (callingModule, { port, path }) => {
-        module.exports.routes.push({ module: callingModule, path });
+        module.exports.routes.push({ module: callingModule, path, port });
         const currentModule = `component.request.handler.route`;
         delegate.register(currentModule, async (request) => {
             let results = { headers: {}, statusCode: -1, statusMessage: "" };
-            const routeModule = module.exports.routes.find(route => route.path === request.path);
+            const routeModule = module.exports.routes.find(route => route.path === request.path && route.port === request.port);
             if (routeModule) {
                 return await delegate.call(routeModule.module, request);
             } else {
