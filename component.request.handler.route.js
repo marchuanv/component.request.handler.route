@@ -5,8 +5,10 @@ logging.config.add("Request Handler Route");
 module.exports = { 
     routes: [],
     handle: (callingModule, options) => {
-        const thisModule = `component.request.handler.route.${options.privatePort}`;
-        module.exports.routes.push({ module: callingModule, privatePort: options.privatePort, path: options.path });
+        const thisModule = `component.request.handler.route.${options.publicPort}`;
+        const newRoute = options;
+        newRoute.module = callingModule;
+        module.exports.routes.push(newRoute);
         delegate.register(thisModule, async (request) => {
             const route = module.exports.routes.find(r => r.path === request.path && r.privatePort === request.privatePort);
             if (route) {
