@@ -4,23 +4,26 @@ const logging = require("logging");
 logging.config.add("Request Handler Route");
 module.exports = { 
     routes: [],
-    handle: (callingModule, { host, port, path }) => {
-        const thisModule = `component.request.handler.route.${port}`;
-        module.exports.routes.push({ module: callingModule, port, path });
+    handle: (callingModule, options) => {
+        const thisModule = `component.request.handler.route.${options.privatePort}`;
+        module.exports.routes.push({ module: callingModule, privatePort: options.privatePort, path: options.path });
         delegate.register(thisModule, async (request) => {
-            let results = { headers: {}, statusCode: -1, statusMessage: "" };
-            const route = module.exports.routes.find(r => r.path === request.path && r.port === request.port);
+            const route = module.exports.routes.find(r => r.path === request.path && r.privatePort === request.privatePort);
             if (route) {
                 return await delegate.call(route.module, request);
             } else {
-                const message = "Not Found";
-                results.statusCode = 404;
-                results.statusMessage = message;
-                results.headers = { "Content-Type":"text/plain", "Content-Length": Buffer.byteLength(message) };
-                results.data = message;
-                return results;
+                const statusMessage = "Not Found";
+                return  { 
+                    headers: { 
+                        "Content-Type":"text/plain", 
+                        "Content-Length": Buffer.byteLength(statusMessage)
+                    },
+                    statusCode: 404,
+                    statusMessage,
+                    data: statusMessage
+                };
             }
         });
-        requestHandler.handle(thisModule, { host, port });
+        requestHandler.handle(thisModule, options);
     }
 };
