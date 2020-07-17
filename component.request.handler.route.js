@@ -6,7 +6,7 @@ module.exports = {
     routes: [],
     handle: (callingModule, options) => {
         const thisModule = `component.request.handler.route.${options.publicPort}`;
-        const newRoute = options;
+        const newRoute = JSON.parse(JSON.stringify(options));
         newRoute.module = callingModule;
         module.exports.routes.push(newRoute);
         delegate.register(thisModule, async (request) => {
