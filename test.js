@@ -1,11 +1,16 @@
 const requestHandlerRoute = require("./component.request.handler.route.js");
 const delegate = require("component.delegate");
 (async()=>{ 
-    const callingModule = "component.request.handler.deferred";
-    delegate.register(callingModule, () => {
-        return { statusCode: 200, statusMessage: "Success", headers: {}, data: null };
+    delegate.register("component.request.handler.deferred", "defer", () => {
+        return { statusCode: 200, statusMessage: "Success", headers: {}, data: "test passed" };
     });
-    await requestHandlerRoute.handle(callingModule, {
+    delegate.register("component.request.handler.deferred", "defer", () => {
+        return { statusCode: 200, statusMessage: "Success", headers: {}, data: "test passed" };
+    });
+    delegate.register("component.request.handler.deferred", "defer", () => {
+        return { statusCode: 200, statusMessage: "Success", headers: {}, data: "test passed" };
+    });
+    await requestHandlerRoute.handle({
         publicHost: "localhost",
         publicPort: 3000,
         privateHost: "localhost",

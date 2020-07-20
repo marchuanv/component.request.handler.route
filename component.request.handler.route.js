@@ -4,15 +4,11 @@ const logging = require("logging");
 logging.config.add("Request Handler Route");
 module.exports = { 
     routes: [],
-    handle: (callingModule, options) => {
-        const thisModule = `component.request.handler.route.${options.publicPort}`;
-        const newRoute = JSON.parse(JSON.stringify(options));
-        newRoute.module = callingModule;
-        module.exports.routes.push(newRoute);
-        delegate.register(thisModule, async (request) => {
-            const route = module.exports.routes.find(r => r.path === request.path && r.privatePort === request.privatePort);
-            if (route) {
-                return await delegate.call(route.module, request);
+    handle: (options) => {
+        requestHandler.handle(options);
+        delegate.register(`component.request.handler.route`, "route", async (request) => {
+            if (options.path === request.path && options.privatePort === request.privatePort){
+                return await delegate.call( { context: "component.request.handler.deferred"}, request);
             } else {
                 const statusMessage = "Not Found";
                 return  { 
@@ -26,6 +22,5 @@ module.exports = {
                 };
             }
         });
-        requestHandler.handle(thisModule, options);
     }
 };
