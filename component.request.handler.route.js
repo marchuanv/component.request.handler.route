@@ -7,8 +7,18 @@ module.exports = {
     handle: (options) => {
         requestHandler.handle(options);
         delegate.register(`component.request.handler.route`, "route", async (request) => {
-            if (options.path === request.path && options.privatePort === request.privatePort){
-                return await delegate.call( { context: "component.request.handler.deferred"}, request);
+            if (options.privatePort === request.privatePort){
+                if (options.path === request.path){
+                    return await delegate.call( { context: "component.request.handler.deferred"}, request);
+                } else {
+                    const statusMessage = "Not Found";
+                    return { 
+                        headers: { "Content-Type":"text/plain" },
+                        statusCode: 404,
+                        statusMessage,
+                        data: statusMessage
+                    };
+                }
             } 
         });
     }
