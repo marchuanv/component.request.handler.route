@@ -5,7 +5,7 @@ logging.config.add("Request Handler Route");
 module.exports = { 
     handle: (options) => {
         requestHandler.handle(options);
-        delegate.register(`component.request.handler.route`, "route", async (request) => {
+        delegate.register(`component.request.handler.route.${options.path}`, "route", async (request) => {
             if (options.publicPort === request.publicPort){
                 if (options.path === request.path){
                     return await delegate.call( { context: `component.request.handler.deferred.${request.path}` }, request);
