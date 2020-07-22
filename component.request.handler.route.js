@@ -7,7 +7,7 @@ module.exports = {
         requestHandler.handle(options);
         delegate.register(`component.request.handler.route.${options.publicPort}`, "route", async (request) => {
             if (options.path === request.path){
-                return await delegate.call( { context: `component.request.handler.deferred.${foundRoute.path}` }, request);
+                return await delegate.call( { context: `component.request.handler.deferred.${request.path}` }, request);
             } else {
                 const statusMessage = "Not Found";
                 return { 
