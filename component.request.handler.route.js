@@ -15,12 +15,13 @@ module.exports = {
             }
             intervalId = setInterval(()=>{
                 routes.forEach(r => r.locked = false);
-            },20);
+                clearInterval(intervalId);
+            },200);
+            routes.forEach(r => r.locked = true);
             if (routes.length > 0){
                 const foundRoute = routes.find(r => r.path === request.path);
                 if (foundRoute){
-                    routes.forEach(r => r.locked = true);
-                    const result = await delegate.call( { context: `component.request.handler.deferred.${foundRoute.path}` }, request);
+                    const result = await delegate.call( { context: `component.request.handler.deferred`, name: foundRoute.path }, request);
                     return result;
                 } else {
                     const statusMessage = "Not Found";
