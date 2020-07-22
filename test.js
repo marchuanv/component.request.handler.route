@@ -24,6 +24,20 @@ const delegate = require("component.delegate");
         privatePort: 4000,
         path: "/test"
     });
+    await requestHandlerRoute.handle({
+        publicHost: "localhost",
+        publicPort: 3000,
+        privateHost: "localhost",
+        privatePort: 3000,
+        path: "/authenticate"
+    });
+    await requestHandlerRoute.handle({
+        publicHost: "localhost",
+        publicPort: 4000,
+        privateHost: "localhost",
+        privatePort: 4000,
+        path: "/authenticate"
+    });
 })().catch((err)=>{
     console.error(err);
 });
