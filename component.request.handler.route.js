@@ -6,20 +6,19 @@ module.exports = {
     handle: (options) => {
         requestHandler.handle(options);
         delegate.register(`component.request.handler.route`, "route", async (request) => {
-            if (options.path === request.path && options.publicPort === request.publicPort){
-                return await delegate.call( { context: "component.request.handler.deferred"}, request);
-            } else {
-                const statusMessage = "Not Found";
-                return  { 
-                    headers: { 
-                        "Content-Type":"text/plain", 
-                        "Content-Length": Buffer.byteLength(statusMessage)
-                    },
-                    statusCode: 404,
-                    statusMessage,
-                    data: statusMessage
-                };
-            }
+            if (options.publicPort === request.publicPort){
+                if (options.path === request.path){
+                    return await delegate.call( { context: "component.request.handler.deferred"}, request);
+                } else {
+                    const statusMessage = "Not Found";
+                    return { 
+                        headers: { "Content-Type":"text/plain" },
+                        statusCode: 404,
+                        statusMessage,
+                        data: statusMessage
+                    };
+                }
+            } 
         });
     }
 };
