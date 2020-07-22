@@ -3,11 +3,10 @@ const delegate = require("component.delegate");
 const logging = require("logging");
 logging.config.add("Request Handler Route");
 module.exports = { 
-    routes: [],
     handle: (options) => {
         requestHandler.handle(options);
         delegate.register(`component.request.handler.route`, "route", async (request) => {
-            if (options.path === request.path && options.privatePort === request.privatePort){
+            if (options.path === request.path && options.publicPort === request.publicPort){
                 return await delegate.call( { context: "component.request.handler.deferred"}, request);
             } else {
                 const statusMessage = "Not Found";
