@@ -5,20 +5,32 @@ logging.config.add("Request Handler Route");
 module.exports = {
     routes: [],
     handle: (options) => {
+        let intervalId;
         requestHandler.handle(options);
         module.exports.routes.push({ publicPort: options.publicPort, path: options.path });
         delegate.register(`component.request.handler.route`, options.publicPort, async (request) => {
-            const foundRoute = module.exports.routes.find(r => r.path === request.path && r.publicPort === options.publicPort);
-            if (foundRoute){
-                return await delegate.call( { context: `component.request.handler.deferred.${foundRoute.path}` }, request);
-            } else {
-                const statusMessage = "Not Found";
-                return { 
-                    headers: { "Content-Type":"text/plain" },
-                    statusCode: 404,
-                    statusMessage,
-                    data: statusMessage
-                };
+            const routes = module.exports.routes.filter(r => r.publicPort === options.publicPort && !r.locked);
+            if (intervalId){
+                clearInterval(intervalId);
+            }
+            intervalId = setInterval(()=>{
+                routes.forEach(r => r.locked = false);
+            },20);
+            if (routes.length > 0){
+                const foundRoute = routes.find(r => r.path === request.path);
+                if (foundRoute){
+                    routes.forEach(r => r.locked = true);
+                    const result = await delegate.call( { context: `component.request.handler.deferred.${foundRoute.path}` }, request);
+                    return result;
+                } else {
+                    const statusMessage = "Not Found";
+                    return { 
+                        headers: { "Content-Type":"text/plain" },
+                        statusCode: 404,
+                        statusMessage,
+                        data: statusMessage
+                    };
+                }
             }
         });
     }
