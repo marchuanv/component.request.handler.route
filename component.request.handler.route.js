@@ -2,22 +2,23 @@ const requestHandler = require("component.request.handler");
 const delegate = require("component.delegate");
 const logging = require("logging");
 logging.config.add("Request Handler Route");
+const routes = [];
+
 module.exports = {
-    routes: [],
     handle: (options) => {
-        let intervalId;
-        requestHandler.handle(options);
-        module.exports.routes.push({ publicPort: options.publicPort, path: options.path });
-        delegate.register(`component.request.handler.route`, options.publicPort, async (request) => {
-            const routes = module.exports.routes.filter(r => r.publicPort === options.publicPort && !r.locked);
-            routes.forEach(r => r.locked = true);
-            if (routes.length > 0){
-                const foundRoute = routes.find(r => r.path === request.path);
+        requestHandler.handle({ host: options.host, port: options.port });
+        const route = { host: options.host, port: options.port, path: options.path };
+        routes.push(route);
+        delegate.register(`component.request.handler.route`, route.port, async (request) => {
+            const _filteredRoutes = routes.filter(r => r.port === route.port && !r.locked);
+            _filteredRoutes.forEach(r => r.locked = true);
+            if ( _filteredRoutes.length > 0 ){
+                const foundRoute = _filteredRoutes.find(r => r.path === request.path);
                 if (foundRoute){
-                    const name = `${foundRoute.publicPort}${foundRoute.path}`;
-                    const result = await delegate.call( { context: `component.request.handler.deferred`, name }, request);
+                    const name = `${foundRoute.port}${foundRoute.path}`;
+                    const result = await delegate.call( { context: `component.request.handler.deferred`, name }, request );
                     setTimeout(()=>{
-                        routes.forEach(r => r.locked = false);
+                        _filteredRoutes.forEach(r => r.locked = false);
                     },200);
                     return result;
                 } else {
