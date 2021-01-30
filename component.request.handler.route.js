@@ -7,10 +7,9 @@ const routes = [];
 module.exports = {
     handle: (options) => {
         requestHandler.handle({ host: options.host, port: options.port });
-        const route = { host: options.host, port: options.port, path: options.path };
-        routes.push(route);
-        delegate.register(`component.request.handler.route`, route.port, async (request) => {
-            const _filteredRoutes = routes.filter(r => r.port === route.port && !r.locked);
+        routes.push( { host: options.host, port: options.port, path: options.path } );
+        delegate.register(`component.request.handler.route`, options.port, async (request) => {
+            const _filteredRoutes = routes.filter(r => r.port === request.port && !r.locked);
             _filteredRoutes.forEach(r => r.locked = true);
             if ( _filteredRoutes.length > 0 ){
                 const foundRoute = _filteredRoutes.find(r => r.path === request.path);
