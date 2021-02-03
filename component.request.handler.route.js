@@ -8,18 +8,13 @@ module.exports = {
     handle: (options) => {
         requestHandler.handle({ host: options.host, port: options.port });
         routes.push( { host: options.host, port: options.port, path: options.path } );
-        delegate.register(`component.request.handler.route`, options.port, async (request) => {
-            const _filteredRoutes = routes.filter(r => r.port === request.port && !r.locked);
-            _filteredRoutes.forEach(r => r.locked = true);
-            if ( _filteredRoutes.length > 0 ){
-                const foundRoute = _filteredRoutes.find(r => r.path === request.path);
+        const routeName = `${options.port}${options.path}`;
+        delegate.register(`component.request.handler.route`, routeName, async (request) => {
+            if ((await delegate.callbackCount( { context: `component.request.handler.route` })) === 1) {
+                const foundRoute = routes.find(r => r.port === request.port && r.path === request.path);
                 if (foundRoute){
                     const name = `${foundRoute.port}${foundRoute.path}`;
-                    const result = await delegate.call( { context: `component.request.handler.deferred`, name }, request );
-                    setTimeout(()=>{
-                        _filteredRoutes.forEach(r => r.locked = false);
-                    },200);
-                    return result;
+                    return await delegate.call( { context: `component.request.handler.deferred`, name }, request );
                 } else {
                     const statusMessage = "Not Found";
                     return { 
