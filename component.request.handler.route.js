@@ -7,8 +7,13 @@ const routes = [];
 module.exports = {
     handle: (options) => {
         requestHandler.handle({ host: options.host, port: options.port });
-        routes.push( { host: options.host, port: options.port, path: options.path, requests: [] } );
         const routeName = `${options.port}${options.path}`;
+        const existingRouteIndex = routes.findIndex(r => r.host == options.host && r.port === options.port && r.path === options.path);
+        if (existingRouteIndex > -1){
+            delegate.unregister(`component.request.handler.route`, routeName);
+            routes.splice(existingRouteIndex,1);
+        }
+        routes.push( { host: options.host, port: options.port, path: options.path, requests: [] } );
         delegate.register(`component.request.handler.route`, routeName, async (request) => {
             const foundRoute = routes.find(r => r.port === request.port && r.path === request.path);
             if (foundRoute) {

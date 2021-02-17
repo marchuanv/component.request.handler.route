@@ -21,6 +21,11 @@ const delegate = require("component.delegate");
         port: 3000,
         path: "/test2"
     });
+    await requestHandlerRoute.handle({
+        host: "localhost",
+        port: 3000,
+        path: "/test2"
+    });
 
     let results = await request.send({ 
         host: "localhost",
