@@ -31,6 +31,6 @@ module.exports = {
                     data: statusMessage
                 };
             }
-        },true);
+        });
     }
 };
