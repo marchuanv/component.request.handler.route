@@ -10,7 +10,6 @@ module.exports = {
         const routeName = `${options.port}${options.path}`;
         const existingRouteIndex = routes.findIndex(r => r.host == options.host && r.port === options.port && r.path === options.path);
         if (existingRouteIndex > -1){
-            delegate.unregister(`component.request.handler.route`, routeName);
             routes.splice(existingRouteIndex,1);
         }
         routes.push( { host: options.host, port: options.port, path: options.path, requests: [] } );
@@ -32,6 +31,6 @@ module.exports = {
                     data: statusMessage
                 };
             }
-        });
+        },true);
     }
 };
