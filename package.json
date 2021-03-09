@@ -3,6 +3,8 @@
   "version": "1.0.0",
   "description": "",
   "main": "component.request.handler.route.js",
+  "hostname": "localhost",
+  "port": 3000,
   "engines": {
     "node": "14.12.0",
     "npm": "6.14.8"
