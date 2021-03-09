@@ -1,13 +1,13 @@
 const requestHandlerRoute = require("./component.request.handler.route.js");
-const request = require("component.request");
 const delegate = require("component.delegate");
+const com = require("component");
 (async()=>{ 
   
-    delegate.register("component.request.handler.deferred", "3000/test1", () => {
+    delegate.register( { context: "component.request.handler.deferred", name: "3000/test1" }, () => {
         return { statusCode: 200, statusMessage: "Success", headers: {}, data: "test passed" };
     });
 
-    delegate.register("component.request.handler.deferred", "3000/test2", () => {
+    delegate.register( { context: "component.request.handler.deferred", name: "3000/test2" }, () => {
         return { statusCode: 200, statusMessage: "Success", headers: {}, data: "test passed" };
     });
   
@@ -27,7 +27,9 @@ const delegate = require("component.delegate");
         path: "/test2"
     });
 
-    let results = await request.send({ 
+    const { componentRequest } = await com.require("component.request", { gitUsername: "marchuanv" });
+
+    let results = await componentRequest.send({ 
         host: "localhost",
         port: 3000,
         path: "/test1",
@@ -40,7 +42,7 @@ const delegate = require("component.delegate");
         throw "routing for test 01 failed";
     }
 
-    results = await request.send({ 
+    results = await componentRequest.send({ 
         host: "localhost",
         port: 3000,
         path: "/test2",
