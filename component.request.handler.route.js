@@ -18,6 +18,7 @@ component.require("component.request.handler", { gitUsername: "marchuanv" }).the
                 if (!isHandled){
                     foundRoute.requests.push(request.id);
                     const name = `${foundRoute.port}${foundRoute.path}`;
+                    componentLogging.write("component.request.handler.route", `calling callback for route ${foundRoute.path}` );
                     return await delegate.call( { context: `component.request.handler.deferred`, name }, request );
                 }
             } else {
