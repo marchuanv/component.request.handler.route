@@ -1,13 +1,12 @@
 const component = require("component");
 const { routes } = require("./package.json");
-component.events.register({ componentModule: module, componentParentModuleName: "component.request.handler.deferred" });
-
-component.load({ moduleName: "component.request.handler" }).then( async ({ config }) => {
-    for(const route of routes){
+component.events.register({ componentModule: module, componentParentModuleName: "component.request.handler.deferred" }).then( async ({ requestHandlerRoute }) => {
+    const config = await component.load({ moduleName: "component.request.handler" });
+    for(const route of routes) {
         route.host = config.requestHandler.hostname;
         route.port = config.requestHandler.port;
     };
-    component.events.requestHandlerRoute.subscribe({ name: config.requestHandler.port }, async (request) => {
+    requestHandlerRoute.subscribe({ name: config.requestHandler.port }, async (request) => {
         const foundRoute = routes.find(r => r.port === request.port && r.path === request.path);
         if (foundRoute) {
             if (!foundRoute.requests){
@@ -16,8 +15,8 @@ component.load({ moduleName: "component.request.handler" }).then( async ({ confi
             if (!foundRoute.requests.find(id => id === request.id)){
                 foundRoute.requests.push(request.id);
                 const name = `${foundRoute.port}${foundRoute.path}`;
-                component.logging.write(`calling callback for route ${foundRoute.path}` );
-                return await component.events.requestHandlerRoute.publish( { name }, request );
+                requestHandlerRoute.log(`calling callback for route ${foundRoute.path}` );
+                return await requestHandlerRoute.publish( { name }, request );
             }
         } else {
             const statusMessage = "Not Found";
@@ -30,3 +29,4 @@ component.load({ moduleName: "component.request.handler" }).then( async ({ confi
         }
     });
 });
+
