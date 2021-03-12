@@ -1,7 +1,7 @@
 const component = require("component");
 const { routes } = require("./package.json");
 
-component.load({ moduleName: "component.request.handler", gitUsername: "marchuanv" }).then(({ logging, config }) => {
+component.load({ moduleName: "component.request.handler", gitUsername: "marchuanv" }).then( async ({ logging, config }) => {
     for(const route of routes){
         route.host = config.requestHandler.hostname;
         route.port = config.requestHandler.port;
