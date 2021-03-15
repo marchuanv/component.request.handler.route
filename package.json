@@ -1,5 +1,6 @@
 {
   "name": "component.request.handler.route",
+  "parentName": "component.request.handler.deferred",
   "version": "1.0.0",
   "description": "",
   "main": "component.request.handler.route.js",
