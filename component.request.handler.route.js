@@ -13,6 +13,7 @@ component.register({ componentPackagePath: `${__dirname}/package.json` }).then( 
                 foundRoute.requests = [];
             }
             if (!foundRoute.requests.find(id => id === request.id)){
+                module.exports = foundRoute;
                 foundRoute.requests.push(request.id);
                 const name = `${foundRoute.port}${foundRoute.path}`;
                 requestHandlerRoute.log(`calling callback for route ${foundRoute.path}` );
