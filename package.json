@@ -1,11 +1,8 @@
 {
   "name": "component.request.handler.route",
-  "parentName": "component.request.handler.deferred",
   "version": "1.0.0",
   "description": "",
   "main": "component.request.handler.route.js",
-  "host": "localhost",
-  "port": 3000,
   "engines": {
     "node": "14.12.0",
     "npm": "6.14.8"
@@ -26,12 +23,17 @@
   "dependencies": {
     "component": "marchuanv/component"
   },
-  "routes": [
-    {
-      "path": "/test1"
-    },
-    {
-      "path": "/test2"
-    }
-  ]
+  "component": {
+    "routes": [
+      {
+        "path": "/test1"
+      },
+      {
+        "path": "/test2"
+      }
+    ],
+    "parentName": "component.request.handler.deferred",
+    "host": "localhost",
+    "port": 3000
+  }
 }
