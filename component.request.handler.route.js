@@ -1,5 +1,5 @@
 const component = require("component");
-component.register({ componentPackagePath: `${__dirname}/package.json` }).then( async ({ requestHandlerRoute }) => {
+component.register({ moduleName: "component.request.handler.route" }).then( async ({ requestHandlerRoute }) => {
     requestHandlerRoute.subscribe({ name: port }, async (request) => {
         const foundRoute = routes.find(r.path === request.path);
         if (foundRoute) {
