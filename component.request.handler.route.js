@@ -1,6 +1,6 @@
 const component = require("component");
 const { routes } = require("./package.json");
-component.register({ componentModule: module }).then( async ({ requestHandlerRoute }) => {
+component.register({ componentPackagePath: `${__dirname}/package.json` }).then(({ requestHandlerRoute }) => {
     const { config } = await component.load({ moduleName: "component.request.handler" });
     for(const route of routes) {
         route.host = config.requestHandler.hostname;
