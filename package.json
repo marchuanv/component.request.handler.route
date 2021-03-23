@@ -4,7 +4,7 @@
   "version": "1.0.0",
   "description": "",
   "main": "component.request.handler.route.js",
-  "hostname": "localhost",
+  "host": "localhost",
   "port": 3000,
   "engines": {
     "node": "14.12.0",
