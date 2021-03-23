@@ -1,7 +1,7 @@
 const component = require("component");
 component.register({ moduleName: "component.request.handler.route" }).then( async ({ requestHandlerRoute }) => {
-    requestHandlerRoute.subscribe({ name: port }, async (request) => {
-        const foundRoute = routes.find(r.path === request.path);
+    requestHandlerRoute.subscribe({ name: requestHandlerRoute.port }, async (request) => {
+        const foundRoute = requestHandlerRoute.routes.find(r.path === request.path);
         if (foundRoute) {
             if (!foundRoute.requests){
                 foundRoute.requests = [];
