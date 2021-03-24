@@ -24,14 +24,7 @@
     "component": "marchuanv/component"
   },
   "component": {
-    "routes": [
-      {
-        "path": "/test1"
-      },
-      {
-        "path": "/test2"
-      }
-    ],
+    "routes": [],
     "host": "localhost",
     "port": 3000,
     "parent":[
