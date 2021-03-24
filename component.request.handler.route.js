@@ -9,7 +9,7 @@ component.register({ moduleName: "component.request.handler.route" }).then( asyn
             if (!foundRoute.requests.find(id => id === request.id)){
                 foundRoute.requests.push(request.id);
                 const name = `${requestHandlerRoute.port}${foundRoute.path}`;
-                requestHandlerRoute.log(`calling callback for route ${foundRoute.path}` );
+                await requestHandlerRoute.log(`calling callback for route ${foundRoute.path}` );
                 return await requestHandlerRoute.publish( { name }, request );
             }
         } else {
