@@ -27,9 +27,9 @@
     "routes": [],
     "host": "localhost",
     "port": 3000,
-    "parent":[
-      "component.request.handler.unsecure",
-      "component.request.handler.secure.authenticate"
+    "subscribers": [
+      { "moduleName": "component.request.handler.unsecure" },
+      { "moduleName": "component.request.handler.secure.authenticate" }
     ]
   }
 }
