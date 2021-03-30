@@ -26,10 +26,6 @@
   "component": {
     "channel": 3000,
     "routes": [],
-    "subscribers": [
-      { "moduleName": "component.request.handler.unsecure" },
-      { "moduleName": "component.request.handler.secure.authenticate" }
-    ],
     "publishers": [
       { "moduleName": "component.request.handler.user" }
     ]
