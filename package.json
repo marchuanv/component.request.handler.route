@@ -24,9 +24,8 @@
     "component": "marchuanv/component"
   },
   "component": {
+    "channel": 3000,
     "routes": [],
-    "host": "localhost",
-    "port": 3000,
     "subscribers": [
       { "moduleName": "component.request.handler.unsecure" },
       { "moduleName": "component.request.handler.secure.authenticate" }
