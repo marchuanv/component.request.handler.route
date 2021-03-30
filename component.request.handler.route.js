@@ -10,7 +10,10 @@ component.register(module).then( async ({ requestHandlerRoute }) => {
             if (!foundRoute.requests.find(id => id === requestId)){
                 foundRoute.requests.push(requestId);
                 await requestHandlerRoute.log(`calling callback for route ${foundRoute.path}` );
-                return await requestHandlerRoute.publish( { channel }, request );
+                const results = {};
+                Object.assign(results,foundRoute);
+                Object.assign(results,request);
+                return await requestHandlerRoute.publish( { channel }, results );
             }
         } else {
             const statusMessage = "Not Found";
