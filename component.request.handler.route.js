@@ -5,6 +5,10 @@ component.load(module).then( async ({ requestHandlerRoute }) => {
         for(const route of requestHandlerRoute.config.routes) {
             route.host = requestHandlerRoute.config.host;
             route.port = requestHandlerRoute.config.port;
+            if (route.secure) {
+                route.hashedPassphrase = requestHandlerRoute.config.hashedPassphrase;
+                route.hashedPassphraseSalt = requestHandlerRoute.config.hashedPassphraseSalt;
+            }
         };
         const foundRoute = requestHandlerRoute.config.routes.find(r => r.path === path);
         if (foundRoute) {
