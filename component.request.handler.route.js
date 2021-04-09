@@ -16,7 +16,7 @@ component.load(module).then( async ({ requestHandlerRoute }) => {
                 foundRoute.requests = [];
             }
             if (!foundRoute.requests.find(id => id === request.requestId)){
-                foundRoute.requests.push(requestId);
+                foundRoute.requests.push(request.requestId);
                 await requestHandlerRoute.log(`calling callback for route ${foundRoute.path}` );
                 return await requestHandlerRoute.publish( { channel }, { session, request, route: foundRoute } );
             }
