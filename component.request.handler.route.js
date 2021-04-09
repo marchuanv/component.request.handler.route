@@ -1,8 +1,8 @@
 const component = require("component");
 component.load(module).then( async ({ requestHandlerRoute }) => {
-    const { channel, routes } = requestHandlerRoute.config;
+    const { channel } = requestHandlerRoute.config;
     requestHandlerRoute.subscribe({ channel }, async ({ headers, session, data, path, requestId }) => {
-        const foundRoute = routes.find(r => r.path === path);
+        const foundRoute = requestHandlerRoute.config.routes.find(r => r.path === path);
         if (foundRoute) {
             if (!foundRoute.requests){
                 foundRoute.requests = [];
