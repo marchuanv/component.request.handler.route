@@ -1,6 +1,6 @@
 const component = require("component");
-component.on({eventName: "moduleregistered"}, async ({ requestHandlerRoute }) => {
-    const { channel, routes } = requestHandlerRoute;
+component.load(module).then( async ({ requestHandlerRoute }) => {
+    const { channel, routes } = requestHandlerRoute.config;
     requestHandlerRoute.subscribe({ channel }, async ({ requestId, path }) => {
         const foundRoute = routes.find(r => r.path === path);
         if (foundRoute) {
@@ -26,4 +26,3 @@ component.on({eventName: "moduleregistered"}, async ({ requestHandlerRoute }) =>
         }
     });
 });
-component.register(module);
