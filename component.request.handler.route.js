@@ -1,5 +1,5 @@
 const component = require("component");
-component.register(module).then( async ({ requestHandlerRoute }) => {
+component.on({eventName: "moduleregistered"}, async ({ requestHandlerRoute }) => {
     const { channel, routes } = requestHandlerRoute;
     requestHandlerRoute.subscribe({ channel }, async ({ requestId, path }) => {
         const foundRoute = routes.find(r => r.path === path);
@@ -26,3 +26,4 @@ component.register(module).then( async ({ requestHandlerRoute }) => {
         }
     });
 });
+component.register(module);
