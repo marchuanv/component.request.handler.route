@@ -1,7 +1,6 @@
 const component = require("component");
 component.load(module).then( async ({ requestHandlerRoute }) => {
-    const { channel } = requestHandlerRoute.config;
-    requestHandlerRoute.subscribe({ channel }, async ({ session, request }) => {
+    requestHandlerRoute.subscribe(async ({ session, request }) => {
         for(const route of requestHandlerRoute.config.routes) {
             route.host = request.host;
             route.port = request.port;
@@ -18,7 +17,7 @@ component.load(module).then( async ({ requestHandlerRoute }) => {
             if (!foundRoute.requests.find(id => id === request.requestId)){
                 foundRoute.requests.push(request.requestId);
                 await requestHandlerRoute.log(`calling callback for route ${foundRoute.path}` );
-                return await requestHandlerRoute.publish( { channel }, { session, request, route: foundRoute } );
+                return await requestHandlerRoute.publish({ session, request, route: foundRoute } );
             }
         } else {
             const statusMessage = "Not Found";
