@@ -1,25 +1,24 @@
 const component = require("component");
 component.load(module).then( async ({ requestHandlerRoute }) => {
     const { channel } = requestHandlerRoute.config;
-    requestHandlerRoute.subscribe({ channel }, async ({ headers, session, data, path, requestId }) => {
+    requestHandlerRoute.subscribe({ channel }, async ({ session, request }) => {
         for(const route of requestHandlerRoute.config.routes) {
-            route.host = requestHandlerRoute.config.host;
-            route.port = requestHandlerRoute.config.port;
+            route.host = request.host;
+            route.port = request.port;
             if (route.secure) {
                 route.hashedPassphrase = requestHandlerRoute.config.hashedPassphrase;
                 route.hashedPassphraseSalt = requestHandlerRoute.config.hashedPassphraseSalt;
             }
         };
-        const foundRoute = requestHandlerRoute.config.routes.find(r => r.path === path);
+        const foundRoute = requestHandlerRoute.config.routes.find(r => r.path === request.path);
         if (foundRoute) {
             if (!foundRoute.requests){
                 foundRoute.requests = [];
             }
-            if (!foundRoute.requests.find(id => id === requestId)){
+            if (!foundRoute.requests.find(id => id === request.requestId)){
                 foundRoute.requests.push(requestId);
                 await requestHandlerRoute.log(`calling callback for route ${foundRoute.path}` );
-                const results = { session, headers, data, route: foundRoute };
-                return await requestHandlerRoute.publish( { channel }, results );
+                return await requestHandlerRoute.publish( { channel }, { session, request, route: foundRoute } );
             }
         } else {
             const statusMessage = "Not Found";
