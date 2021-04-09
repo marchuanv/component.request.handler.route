@@ -10,9 +10,7 @@ component.load(module).then( async ({ requestHandlerRoute }) => {
             if (!foundRoute.requests.find(id => id === requestId)){
                 foundRoute.requests.push(requestId);
                 await requestHandlerRoute.log(`calling callback for route ${foundRoute.path}` );
-                const results = {};
-                Object.assign(results,foundRoute);
-                Object.assign(results,request);
+                const results = { session, headers, data, route: foundRoute };
                 return await requestHandlerRoute.publish( { channel }, results );
             }
         } else {
