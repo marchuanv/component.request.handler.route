@@ -5,17 +5,20 @@ const { RegisteredRoutes } = require("./lib/registeredroutes.js");
 
 component.load(module).then( async ({ requestHandlerRoute }) => {
     const registeredRoutes = new RegisteredRoutes();
+    registeredRoutes.register(new Route("/routes/register"));
     requestHandlerRoute.subscribe(async ({ session, request }) => {
-        const { path, hashedPassphrase, hashedPassphraseSalt } = utils.getJSONObject(request.data) || {};
-        if (path !== undefined) { //request for a new route
-            const newRoute = new Route(path);
-            if (hashedPassphrase && hashedPassphraseSalt) {
-                newRoute.secure(hashedPassphrase, hashedPassphraseSalt)
-            }
-            registeredRoutes.push(newRoute);
-        }
         const foundRoute = registeredRoutes.find(request.path);
         if (foundRoute) {
+            if (foundRoute.isRegisterRoute) {
+                const { path, hashedPassphrase, hashedPassphraseSalt } = utils.getJSONObject(request.data) || {};
+                if (path !== undefined) { //request for a new route
+                    const newRoute = new Route(path);
+                    if (hashedPassphrase && hashedPassphraseSalt) {
+                        newRoute.secure(hashedPassphrase, hashedPassphraseSalt);
+                    }
+                    registeredRoutes.push(newRoute);
+                }
+            }
             if (!foundRoute.hasRequestId(request.requestId)){
                 foundRoute.addRequestId(request.requestId);
                 await requestHandlerRoute.log(`calling callback for route ${foundRoute.path}` );
