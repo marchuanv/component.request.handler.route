@@ -5,14 +5,14 @@ const { RegisteredRoutes } = require("./lib/registeredroutes.js");
 
 component.load(module).then( async ({ requestHandlerRoute }) => {
     const registeredRoutes = new RegisteredRoutes();
-    registeredRoutes.register(new Route("/routes/register"));
+    registeredRoutes.register(new Route({ isRegisterRoute: true }));
     requestHandlerRoute.subscribe(async ({ session, request }) => {
         const foundRoute = registeredRoutes.find(request.path);
         if (foundRoute) {
             if (foundRoute.isRegisterRoute) {
                 const { path, hashedPassphrase, hashedPassphraseSalt } = utils.getJSONObject(request.data) || {};
                 if (path) { //request for a new route
-                    const newRoute = new Route(path);
+                    const newRoute = new Route({ path });
                     if (hashedPassphrase && hashedPassphraseSalt) {
                         newRoute.secure(hashedPassphrase, hashedPassphraseSalt);
                     }
