@@ -1,21 +1,23 @@
 const component = require("component");
+const utils = require("utils");
+const { Route } = require("./lib/route.js");
+const { RegisteredRoutes } = require("./lib/registeredroutes.js");
+
 component.load(module).then( async ({ requestHandlerRoute }) => {
+    const routes = new RegisteredRoutes();
     requestHandlerRoute.subscribe(async ({ session, request }) => {
-        for(const route of requestHandlerRoute.config.routes) {
-            route.host = request.host;
-            route.port = request.port;
-            if (route.secure) {
-                route.hashedPassphrase = requestHandlerRoute.config.hashedPassphrase;
-                route.hashedPassphraseSalt = requestHandlerRoute.config.hashedPassphraseSalt;
+        const { path, hashedPassphrase, hashedPassphraseSalt } = utils.getJSONObject(request.data) || {};
+        if (path !== undefined) { //request for a new route
+            const newRoute = new Route(path);
+            routes.push(newRoute);
+            if (hashedPassphrase && hashedPassphraseSalt) {
+                newRoute.secure(hashedPassphrase, hashedPassphraseSalt)
             }
-        };
-        const foundRoute = requestHandlerRoute.config.routes.find(r => r.path === request.path);
+        }
+        const foundRoute = routes.find(request.path)
         if (foundRoute) {
-            if (!foundRoute.requests){
-                foundRoute.requests = [];
-            }
-            if (!foundRoute.requests.find(id => id === request.requestId)){
-                foundRoute.requests.push(request.requestId);
+            if (!foundRoute.hasRequestId(request.requestId)){
+                foundRoute.addRequestId(request.requestId);
                 await requestHandlerRoute.log(`calling callback for route ${foundRoute.path}` );
                 return await requestHandlerRoute.publish({ session, request, route: foundRoute } );
             }
