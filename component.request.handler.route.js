@@ -4,17 +4,17 @@ const { Route } = require("./lib/route.js");
 const { RegisteredRoutes } = require("./lib/registeredroutes.js");
 
 component.load(module).then( async ({ requestHandlerRoute }) => {
-    const routes = new RegisteredRoutes();
+    const registeredRoutes = new RegisteredRoutes();
     requestHandlerRoute.subscribe(async ({ session, request }) => {
         const { path, hashedPassphrase, hashedPassphraseSalt } = utils.getJSONObject(request.data) || {};
         if (path !== undefined) { //request for a new route
             const newRoute = new Route(path);
-            routes.push(newRoute);
             if (hashedPassphrase && hashedPassphraseSalt) {
                 newRoute.secure(hashedPassphrase, hashedPassphraseSalt)
             }
+            registeredRoutes.push(newRoute);
         }
-        const foundRoute = routes.find(request.path)
+        const foundRoute = registeredRoutes.find(request.path);
         if (foundRoute) {
             if (!foundRoute.hasRequestId(request.requestId)){
                 foundRoute.addRequestId(request.requestId);
