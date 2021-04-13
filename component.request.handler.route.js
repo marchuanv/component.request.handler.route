@@ -16,7 +16,7 @@ component.load(module).then( async ({ requestHandlerRoute }) => {
                     if (hashedPassphrase && hashedPassphraseSalt) {
                         newRoute.secure(hashedPassphrase, hashedPassphraseSalt);
                     }
-                    registeredRoutes.push(newRoute);
+                    registeredRoutes.register(newRoute);
                     const statusMessage = `${path} registered`;
                     return { 
                         headers: { "Content-Type":"text/plain" },
