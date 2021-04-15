@@ -6,7 +6,7 @@ const { RegisteredRoutes } = require("./lib/registeredroutes.js");
 component.load(module).then( async ({ requestHandlerRoute }) => {
     const registeredRoutes = new RegisteredRoutes();
     registeredRoutes.register(new Route({ isRegisterRoute: true }));
-    requestHandlerRoute.subscribe(async ({ session, request }) => {
+    requestHandlerRoute.receiveDependantComponentNotifications(async ({ session, request }) => {
         const foundRoute = registeredRoutes.find(request.path);
         if (foundRoute) {
             if (foundRoute.isRegisterRoute) {
@@ -37,7 +37,7 @@ component.load(module).then( async ({ requestHandlerRoute }) => {
                 if (!foundRoute.hasRequestId(request.requestId)){
                     foundRoute.addRequestId(request.requestId);
                     await requestHandlerRoute.log(`calling callback for route ${foundRoute.path}` );
-                    return await requestHandlerRoute.publish({ session, request, route: foundRoute } );
+                    return await requestHandlerRoute.notifyDependantComponents({ session, request, route: foundRoute } );
                 }
             }
         } else {
