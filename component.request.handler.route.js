@@ -19,6 +19,7 @@ component.load(module).then( async ({ requestHandlerRoute }) => {
                     registeredRoutes.register(newRoute);
                     const statusMessage = `${path} registered`;
                     return { 
+                        success: true,
                         headers: { "Content-Type":"text/plain" },
                         statusCode: 200,
                         statusMessage,
@@ -27,6 +28,7 @@ component.load(module).then( async ({ requestHandlerRoute }) => {
                 } else {
                     const statusMessage = `failed to register route, no URL path was specified.`;
                     return { 
+                        success: false,
                         headers: { "Content-Type":"text/plain" },
                         statusCode: 500,
                         statusMessage,
@@ -43,6 +45,7 @@ component.load(module).then( async ({ requestHandlerRoute }) => {
         } else {
             const statusMessage = "Not Found";
             return { 
+                success: false,
                 headers: { "Content-Type":"text/plain" },
                 statusCode: 404,
                 statusMessage,
