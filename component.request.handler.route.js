@@ -6,7 +6,7 @@ const { RegisteredRoutes } = require("./lib/registeredroutes.js");
 component.load(module).then( async ({ requestHandlerRoute }) => {
     const registeredRoutes = new RegisteredRoutes();
     registeredRoutes.register(new Route({ isRegisterRoute: true }));
-    requestHandlerRoute.receiveDependantComponentNotifications(null, async ({ session, request }) => {
+    requestHandlerRoute.subscribe(async ({ headers, data }) => {
         const foundRoute = registeredRoutes.find(request.path);
         if (foundRoute) {
             if (foundRoute.isRegisterRoute) {
